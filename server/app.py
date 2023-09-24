@@ -55,12 +55,8 @@ class Plants(Resource):
             200
         )
 
-    
-    
-        
+  
 # Flask Restful is best suited for returning json with RESTful APIs. @app.route() can return json and html, but is more cumbersome to write and debug than Flask RESTful. Use Flask RESTful if you only intend to return json. 
-
-        
 
 
 api.add_resource(Plants, '/plants')
@@ -70,6 +66,7 @@ class PlantById(Resource):
 
     def get(self, id):
         return Plant.query.filter(Plant.id == id).first().to_dict()
+    
     
     def patch(self, id):
         record = Plant.query.filter(Plant.id == id).first()
@@ -86,8 +83,19 @@ class PlantById(Resource):
             200
         )
     
-    def delete(self):
-        return 
+    def delete(self, id):
+        record = Plant.query.filter(Plant.id == id).first() 
+        db.session.delete(record)
+        db.session.commit()
+
+        response_dict = {
+            "message": "record successfully deleted"
+        }
+
+        return make_response(
+            response_dict,
+            204
+        )
     
 api.add_resource(PlantById, "/plants/<int:id>")
 
